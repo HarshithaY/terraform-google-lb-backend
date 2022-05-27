@@ -1,11 +1,12 @@
-resource "google_compute_backend_bucket" "image_backend" {
-  name        = "image-backend-bucket"
-  description = "Contains beautiful images"
-  bucket_name = google_storage_bucket.image_bucket.name
-  enable_cdn  = true
+resource "google_compute_backend_service" "default" {
+  project = var.project
+  name    = var.backend
+  health_checks = [google_compute_http_health_check.default.id]
 }
 
-resource "google_storage_bucket" "image_bucket" {
-  name     = "image-store-bucket"
-  location = "EU"
+resource "google_compute_http_health_check" "default" {
+  name               = var.healthcheck
+  request_path       = "/"
+  check_interval_sec = 1
+  timeout_sec        = 1
 }
